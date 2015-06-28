@@ -1,7 +1,7 @@
 # Some React.js components
 
 ## Modal window
-Just a modal window component. Depends on [underscore.js](http://underscorejs.org/)
+Just a modal window component. Depended on [underscore.js](http://underscorejs.org/)
 
 ### Usage
 Here is the trigger method and it's params:

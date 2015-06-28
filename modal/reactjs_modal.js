@@ -4,10 +4,6 @@ var ReactModal = React.createClass({
     },
     componentDidMount: function () {
         this.setState({show: true});
-        key('esc', this.hideModal)
-    },
-    componentWillUnMount: function () {
-        key.unbind('esc', this.hideModal)
     },
     hideModal: function () {
         this.setState({show: false});
