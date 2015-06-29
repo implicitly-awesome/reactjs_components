@@ -65,7 +65,6 @@ Map = React.createClass
     L.geoJson(@props.features, {
       style: @props.featuresStyle,
       onEachFeature: (feature, layer) =>
-#        layer.bindPopup("<a href='' onclick='{this.openTreksList}'>"+feature.name+"</a>")
         handlers = {
           mouseover: (e) =>
             e.target.setStyle @props.featuresHighlightedStyle
