@@ -12,16 +12,6 @@ Map = React.createClass
     pathLinesStyle: React.PropTypes.object,
     onMarkerHandlers: React.PropTypes.object
 
-  getInitialState: ->
-    {
-    markerIcon: L.icon({
-      iconUrl: '/assets/icons/marker_icon.png',
-      iconSize:     [40, 50],
-      iconAnchor:   [20, 50],
-      popupAnchor:  [1, -40]
-    })
-    }
-
   getDefaultProps: ->
     {
     center: [20, 10],
