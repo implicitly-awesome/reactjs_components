@@ -33,9 +33,11 @@ featuresStyle: React.PropTypes.object,
 featuresHighlightedStyle: React.PropTypes.object,
 onFeatureHandlers: React.PropTypes.object,
 markers: React.PropTypes.array,
-pathLines: React.PropTypes.array,
+pathLines: React.PropTypes.bool,
 pathLinesStyle: React.PropTypes.object,
-onMarkerHandlers: React.PropTypes.object
+onMarkerHandlers: React.PropTypes.object,
+setFocusOnLastMarker: React.PropTypes.bool,
+markerDraggingEnable: React.PropTypes.bool
 ```
 
 ### Usage
@@ -52,4 +54,8 @@ var onMarkerClick = function(e) {
 };
 var markers = [{lat:1.23, lng:3.45},{lat:2.34, lng:4.56}];
 React.render(mapInstance({markers:markers, onMapHandlers:{click:onMapClick}, onMarkerHandlers:{click:onMarkerClick}}), document.getElementById('worldmap'));
+```
+You can always reference the created leaflet map object from your javascript because of
+```javascript
+@map = window.map
 ```

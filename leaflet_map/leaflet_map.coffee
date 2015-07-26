@@ -1,3 +1,5 @@
+@map = window.map = null
+
 Map = React.createClass
   propTypes:
     center: React.PropTypes.array,
@@ -8,9 +10,21 @@ Map = React.createClass
     featuresHighlightedStyle: React.PropTypes.object,
     onFeatureHandlers: React.PropTypes.object,
     markers: React.PropTypes.array,
-    pathLines: React.PropTypes.array,
+    pathLines: React.PropTypes.bool,
     pathLinesStyle: React.PropTypes.object,
-    onMarkerHandlers: React.PropTypes.object
+    onMarkerHandlers: React.PropTypes.object,
+    setFocusOnLastMarker: React.PropTypes.bool,
+    markerDraggingEnable: React.PropTypes.bool
+
+  getInitialState: ->
+    {
+    markerIcon: L.icon({
+      iconUrl: '/assets/icons/marker_icon.png',
+      iconSize:     [40, 50],
+      iconAnchor:   [20, 50],
+      popupAnchor:  [1, -40]
+    })
+    }
 
   getDefaultProps: ->
     {
@@ -32,25 +46,28 @@ Map = React.createClass
     },
     onFeatureHandlers: {},
     markers: [],
-    pathLines: [],
+    pathLines: false,
     pathLinesStyle: {
       color: '#84BEAF',
       weight: 2,
       opacity: 0.7
     },
-    onMarkerHandlers: {}
+    onMarkerHandlers: {},
+    setFocusOnLastMarker: false,
+    markerDraggingEnable: false
     }
 
   componentDidMount: ->
-    map = @map = L.map(@getDOMNode(),{
+    @map = window.map = L.map(@getDOMNode(),{
       layers: MQ.mapLayer(),
       center: @props.center,
       zoom: @props.zoom
     }).setView(@props.center, @props.zoom)
+
     handlers = {}
     for k, v of @props.onMapHandlers
       handlers[k] = v
-    map.on(handlers)
+    @map.on(handlers)
 
     L.geoJson(@props.features, {
       style: @props.featuresStyle,
@@ -69,18 +86,23 @@ Map = React.createClass
     }).addTo(@map)
 
     handlers = {}
-    for latLng in @props.markers
-      marker = L.marker(latLng, {icon:@state.markerIcon}).addTo(@map)
+    paths = []
+    for m in @props.markers
+      marker = L.marker(m, {icon:@state.markerIcon}).addTo(@map)
+      marker._leaflet_id = m.id if m.id?
+      marker.options = m.options if m.options?
+      marker.dragging.enable() if @props.markerDraggingEnable
+      paths.push marker.getLatLng() if @props.pathLines
       for k, v of @props.onMarkerHandlers
         handlers[k] = v
       marker.on(handlers)
 
-    if @props.markers.length > 0
+    if @props.markers.length > 0 && @props.setFocusOnLastMarker
       last_marker = @props.markers[0]
       @map.setView [last_marker.lat, last_marker.lng], 15
 
-    for line in @props.pathLines
-      L.geoJson(line, {style:@props.pathLinesStyle}).addTo(@map)
+    if paths.length > 0
+      L.polyline(paths, @props.pathLinesStyle).addTo(@map)
 
   render: -> `<div id='map'></div>`
 
