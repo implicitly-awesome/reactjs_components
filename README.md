@@ -1,18 +1,30 @@
 # Some React.js components
 
 ## Modal window
-Just a modal window component. Depended on [underscore.js](http://underscorejs.org/)
+Just a modal window component. Dependent on React.addons.CSSTransitionGroup.
 
 ### Usage
 Here is the trigger method and it's params:
 ```javascript
-reactModal = function (id, headerTitle, bodyContent, additionalClasses)
+reactModal = function (containerId, headerTitle = '', bodyContent = '', additionalClasses = {}, onShow = null, onHide = null)
 ```
 
 ```html
-<a class="klass" onclick="reactModal('new-modal', 'New Modal', $('#new-modal-body').html(), {content: 'content_class', header: 'header_class', body: 'body_class'});">Show modal</a>
+<a class="klass" onclick="reactModal('new-modal', 'New Modal', $('#new-modal-body').html(), {content: 'content_class', header: 'header_class', body: 'body_class'}, function(){}, function(){});">Show modal</a>
 ```
-It creates a modal container div, appends it to body and triggers the 'show' state param.
+It creates a modal container div (if no proper container was found with provided containerId), appends it to body and triggers the 'show' state param.
+
+### Events
+There are two events supported at the moment:
+* onShow
+* onHide
+
+### additionalClasses
+Used in order to add custom CSS classes to default modal window elements:
+* content (wrapper)
+* header
+* title
+* body
 
 ## Leaflet map
 React wrapper for Leaflet map + some abstractions over map events.
