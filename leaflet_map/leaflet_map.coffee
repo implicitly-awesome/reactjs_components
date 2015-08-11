@@ -58,7 +58,7 @@ Map = React.createClass
     }
 
   componentDidMount: ->
-    @map = window.map = L.map(@getDOMNode(),{
+    window.map = window.map = L.map(@getDOMNode(),{
       layers: MQ.mapLayer(),
       center: @props.center,
       zoom: @props.zoom
@@ -67,7 +67,7 @@ Map = React.createClass
     handlers = {}
     for k, v of @props.onMapHandlers
       handlers[k] = v
-    @map.on(handlers)
+    window.map.on(handlers)
 
     L.geoJson(@props.features, {
       style: @props.featuresStyle,
@@ -83,14 +83,12 @@ Map = React.createClass
         for k, v of @props.onFeatureHandlers
           handlers[k] = v
         layer.on(handlers)
-    }).addTo(@map)
+    }).addTo(window.map)
 
     handlers = {}
     paths = []
     for m in @props.markers
-      marker = L.marker(m, {icon:@state.markerIcon}).addTo(@map)
-      marker._leaflet_id = m.id if m.id?
-      marker.options = m.options if m.options?
+      marker = L.marker(m, {icon:@state.markerIcon, id: (m.id if m.id?), timestamp: (m.timestamp if m.timestamp?), marker: (m.marker if m.marker?)}).addTo(window.map)
       marker.dragging.enable() if @props.markerDraggingEnable
       paths.push marker.getLatLng() if @props.pathLines
       for k, v of @props.onMarkerHandlers
@@ -99,10 +97,10 @@ Map = React.createClass
 
     if @props.markers.length > 0 && @props.setFocusOnLastMarker
       last_marker = @props.markers[0]
-      @map.setView [last_marker.lat, last_marker.lng], 15
+      window.map.setView [last_marker.lat, last_marker.lng], 15
 
     if paths.length > 0
-      L.polyline(paths, @props.pathLinesStyle).addTo(@map)
+      L.polyline(paths, @props.pathLinesStyle).addTo(window.map)
 
   render: -> `<div id='map'></div>`
 
